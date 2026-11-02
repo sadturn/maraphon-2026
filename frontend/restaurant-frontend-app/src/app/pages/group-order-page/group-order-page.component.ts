@@ -92,12 +92,17 @@ export class GroupOrderPageComponent implements OnInit {
     this.groupOrdersService
       .getGroupInvite$(this.reservationId)
       .pipe(
+        // сесію Owner бекенд створює під час першого guest-session-id — тому спершу її id,
+        // а вже потім кошики: інакше на новому бронюванні картка Owner з'являється лише з наступною синхронізацією
         switchMap((invite) =>
-          forkJoin({
-            sessions: this.groupOrdersService.getSessions$(invite.GroupReservationId),
-            ownSessionId: this.groupOrdersService.getOwnerSessionId$(this.reservationId),
-            groupStatus: this.groupOrdersService.getStatus$(invite.GroupReservationId),
-          }).pipe(map((data) => ({ invite, ...data }))),
+          this.groupOrdersService.getOwnerSessionId$(this.reservationId).pipe(
+            switchMap((ownSessionId) =>
+              forkJoin({
+                sessions: this.groupOrdersService.getSessions$(invite.GroupReservationId),
+                groupStatus: this.groupOrdersService.getStatus$(invite.GroupReservationId),
+              }).pipe(map((data) => ({ invite, ownSessionId, ...data }))),
+            ),
+          ),
         ),
         takeUntilDestroyed(this.destroyRef),
       )
