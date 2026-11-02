@@ -201,8 +201,22 @@ public class GuestSessionService(
     {
         var sessions = await guestSessionRepository.GetAllByGroupReservationIdAsync(groupReservationId) ?? [];
 
+        // While the group is open, the owner's pre-order lives in the reservation's order, not in
+        // the owner session (submit snapshots it there, see SubmitGroupPreOrderAsync). After submit
+        // the order also holds guests' dishes, so it must not be read as the owner's.
+        List<OrderItem>? ownerOrderItems = null;
+        if (sessions.Any(s => s.IsOwnerSession && !s.IsSubmitted))
+        {
+            var group = await groupReservationRepository.GetGroupReservationByIdAsync(groupReservationId);
+            if (group?.Status == GroupReservationStatus.Open)
+                ownerOrderItems = await GetActiveOrderItemsAsync(reservation.Id);
+        }
+
+        List<OrderItem> DishesOf(GuestSession session) =>
+            session.IsOwnerSession && ownerOrderItems != null ? ownerOrderItems : session.Dishes ?? [];
+
         var dishIds = sessions
-            .SelectMany(s => s.Dishes ?? [])
+            .SelectMany(DishesOf)
             .Select(s => s.DishId)
             .Distinct()
             .ToArray();
@@ -214,7 +228,7 @@ public class GuestSessionService(
 
         foreach (var guestSession in sessions)
         {
-            var items = (guestSession.Dishes ?? [])
+            var items = DishesOf(guestSession)
                 .Where(d => dishesById.ContainsKey(d.DishId))
                 .Select(d => new OrderItemResponse
                 {
@@ -229,13 +243,27 @@ public class GuestSessionService(
                 ? await GetOwnerNameAsync(reservation.CustomerId) ?? guestSession.GuestName
                 : guestSession.GuestName;
 
-            participants.Add(new Participant(guestSession.Id, type, name, items, total, guestSession.IsSubmitted));
+            // The owner's own order always goes to the restaurant, so a non-empty one counts as submitted
+            bool isSubmitted = guestSession.IsSubmitted || (guestSession.IsOwnerSession && items.Length > 0);
+
+            participants.Add(new Participant(guestSession.Id, type, name, items, total, isSubmitted));
         }
 
         // Owner first, then guests
         participants = participants.OrderBy(p => p.Type == ParticipantType.Owner ? 0 : 1).ToList();
 
         return new GetAllSessionsResponse(participants, participants.Sum(p => p.Total));
+    }
+
+    private async Task<List<OrderItem>> GetActiveOrderItemsAsync(string reservationId)
+    {
+        var order = await orderRepository.GetOrderByReservationIdAsync(reservationId);
+        if (order is null || order.Status == OrderStatus.Cancelled)
+            return [];
+
+        return (order.Dishes ?? [])
+            .Where(d => d.State != OrderItemState.Canceled && d.Quantity > 0)
+            .ToList();
     }
 
     private async Task<string?> GetOwnerNameAsync(string? customerId)
@@ -270,9 +298,9 @@ public class GuestSessionService(
     {
         var sessions = await guestSessionRepository.GetAllByGroupReservationIdAsync(groupReservationId);
 
-        // Owner is always 1 active participant. 
+        // Owner is always 1 active participant, whether or not their own session exists yet.
         // If sessions is null/empty, it safely evaluates to 0 joined guests + 1 owner = 1.
-        return (sessions?.Count ?? 0) + 1;
+        return (sessions?.Count(s => !s.IsOwnerSession) ?? 0) + 1;
     }
 
     private async Task ValidateGroupReservationId(string groupReservationId) => await GetGroupReservationAndValidateAsync(groupReservationId);
@@ -378,7 +406,8 @@ public class GuestSessionService(
         ValidateGroupReservation(group);
 
         var sessions = await guestSessionRepository.GetAllByGroupReservationIdAsync(groupReservationId) ?? [];
-        var submittedSessions = sessions.Where(s => s.IsSubmitted).ToList();
+        // The owner's dishes are already in the order; only joined guests' carts get merged in
+        var submittedSessions = sessions.Where(s => s.IsSubmitted && !s.IsOwnerSession).ToList();
 
         if (submittedSessions.Count == 0)
             throw new ValidationException("There are no submitted guest sessions.");
@@ -402,6 +431,20 @@ public class GuestSessionService(
             ?? throw new ValidationException($"Order for reservation {reservationId} was not found.");
 
         order.Dishes ??= [];
+
+        // Snapshot the owner's own pre-order before guests' dishes are merged into the order,
+        // so the owner card keeps showing only the owner's dishes after submit
+        var ownerSession = sessions.FirstOrDefault(s => s.IsOwnerSession);
+        if (ownerSession != null)
+        {
+            ownerSession.Dishes = order.Dishes
+                .Where(d => d.State != OrderItemState.Canceled && d.Quantity > 0)
+                .Select(d => new OrderItem { DishId = d.DishId, Quantity = d.Quantity, State = d.State })
+                .ToList();
+            ownerSession.IsSubmitted = true;
+            await guestSessionRepository.SaveAsync(ownerSession);
+        }
+
         foreach (var item in mergedItems)
         {
             var existing = order.Dishes.FirstOrDefault(d => d.DishId == item.DishId);

@@ -7,15 +7,17 @@ import { SKIP_ERROR_TOAST } from './skip-error-toast.context';
 import { tokenInterceptor } from './token.interceptor';
 
 const URL = 'https://test.api/reservations';
+const GUEST_URL = 'https://test.api/guest/groups/grp-1/sessions';
 
 describe('tokenInterceptor', () => {
   let http: HttpClient;
   let httpMock: HttpTestingController;
   let toastService: jasmine.SpyObj<ToastService>;
+  let authService: jasmine.SpyObj<AuthenticationService>;
 
   beforeEach(() => {
     toastService = jasmine.createSpyObj<ToastService>('ToastService', ['error']);
-    const authService = jasmine.createSpyObj<AuthenticationService>('AuthenticationService', [
+    authService = jasmine.createSpyObj<AuthenticationService>('AuthenticationService', [
       'getTokens',
     ]);
     authService.getTokens.and.returnValue(null);
@@ -59,5 +61,43 @@ describe('tokenInterceptor', () => {
 
     expect(toastService.error).not.toHaveBeenCalled();
     expect(receivedStatus).toBe(400);
+  });
+
+  it('adds the signed-in user token to a guest endpoint without its own Authorization', () => {
+    authService.getTokens.and.returnValue({ idToken: 'owner-token' } as ReturnType<AuthenticationService['getTokens']>);
+    http.get(GUEST_URL).subscribe();
+
+    const req = httpMock.expectOne(GUEST_URL);
+    expect(req.request.headers.get('Authorization')).toBe('Bearer owner-token');
+    req.flush({ participants: [], total: 0 });
+  });
+
+  it('keeps other guest endpoints anonymous for a signed-in user', () => {
+    authService.getTokens.and.returnValue({ idToken: 'owner-token' } as ReturnType<AuthenticationService['getTokens']>);
+    const inviteUrl = 'https://test.api/guest/invites/abc';
+    http.get(inviteUrl).subscribe();
+
+    const req = httpMock.expectOne(inviteUrl);
+    expect(req.request.headers.has('Authorization')).toBeFalse();
+    req.flush({});
+  });
+
+  it('keeps the guest session token on a guest endpoint', () => {
+    authService.getTokens.and.returnValue({ idToken: 'owner-token' } as ReturnType<AuthenticationService['getTokens']>);
+    http.get(GUEST_URL, { headers: { Authorization: 'Bearer guest-token' } }).subscribe();
+
+    const req = httpMock.expectOne(GUEST_URL);
+    expect(req.request.headers.get('Authorization')).toBe('Bearer guest-token');
+    req.flush({ participants: [], total: 0 });
+  });
+
+  it('does not show a toast for a silent guest request', () => {
+    http
+      .get(GUEST_URL, { context: new HttpContext().set(SKIP_ERROR_TOAST, true) })
+      .subscribe({ error: () => undefined });
+
+    httpMock.expectOne(GUEST_URL).flush({ error: 'Down' }, { status: 500, statusText: 'Server Error' });
+
+    expect(toastService.error).not.toHaveBeenCalled();
   });
 });

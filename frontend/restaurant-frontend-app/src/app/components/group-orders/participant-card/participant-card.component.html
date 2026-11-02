@@ -1,11 +1,24 @@
 <article class="card">
   <h2 class="title">{{ title() }}</h2>
 
-  @if (participant().isSubmitted) {
-    <span class="chip submitted">Submitted</span>
-  } @else {
-    <span class="chip pending">Still choosing</span>
-  }
+  <div class="meta">
+    @if (participant().isSubmitted) {
+      <span class="chip submitted">Submitted</span>
+    } @else {
+      <span class="chip pending">Still choosing</span>
+    }
+
+    @if (canRemove()) {
+      <button
+        type="button"
+        class="button button--tertiary button--small remove"
+        [attr.aria-label]="'Remove ' + participant().name"
+        (click)="removeClick.emit(participant())"
+      >
+        Remove Guest
+      </button>
+    }
+  </div>
 
   @if (participant().items.length) {
     <ul class="items">

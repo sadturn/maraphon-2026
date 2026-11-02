@@ -67,6 +67,25 @@
   }
 }
 
+.sync {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 16px;
+}
+
+.sync-text {
+  margin: 0;
+  font-size: 14px;
+  color: color.$neutral-600;
+
+  &--failed {
+    color: color.$neutral-900;
+  }
+}
+
 .notice {
   display: flex;
   align-items: center;
@@ -130,6 +149,21 @@
   flex-wrap: wrap;
   gap: 12px;
   width: 100%;
+}
+
+// червона обвідка для незворотної дії (Remove Guest) — як у макеті
+.button--danger {
+  color: color.$red-400;
+  background-color: color.$neutral-0;
+  border-color: color.$red-400;
+
+  &:hover:not(:disabled) {
+    background-color: color.$red-30;
+  }
+
+  &:active:not(:disabled) {
+    background-color: color.$red-100;
+  }
 }
 
 .meta {
