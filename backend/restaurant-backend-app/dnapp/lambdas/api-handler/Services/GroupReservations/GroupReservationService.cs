@@ -32,14 +32,10 @@ public class GroupReservationService(
         if (groupReservation.Status != GroupReservationStatus.Open)
             throw new GroupReservationExpiredException();
 
-        Task<Reservation?> reservationTask = reservationRepository.GetReservationByIdAsync(groupReservation.ReservationId);
-        Task<int> countTask = guestSessionRepository.CountByGroupReservationId(groupReservation.GroupReservationId);
-
-        Reservation reservation = await reservationTask ?? throw new ValidationException("Associated reservation not found.");
-        int joinedGuestsCount = await countTask;
-
-        if (joinedGuestsCount + 1 >= reservation.GuestCount)
-            throw new GuestLimitExceededException();
+        // No guest limit check here: the owner's screen reads this invite too, and must keep working
+        // when the group is full. The limit is enforced where guests join (POST /guest/sessions).
+        Reservation reservation = await reservationRepository.GetReservationByIdAsync(groupReservation.ReservationId)
+            ?? throw new ValidationException("Associated reservation not found.");
 
         Table table = await tableRepository.GetTableAsync(reservation.TableId)
             ?? throw new InvalidOperationException("Associated table not found.");
