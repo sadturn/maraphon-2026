@@ -68,3 +68,19 @@ Real API: background sync every 15 s, "Updated at" + Refresh, silent requests, r
 
 - [x] Bonus
 Remove Guest with confirmation; the list updates from the server response.
+
+## Homework 7 - QA
+
+**US11 Guest Viewing Reservation Menu** — [full report with screenshots](homework-qa/README.md)
+
+- [x] Requirements analysis
+38 gaps in the User Story and 9 mismatches between the story and the Figma design.
+
+- [x] Test cases
+19 test cases: positive, negative, data refresh (AC5) and mobile.
+
+- [x] Testing
+Test run against the screenshot of the implemented Menu page: 1 passed, 5 failed, 13 not run.
+
+- [x] Defect reports
+7 defects (4 Major, 2 Minor, 1 Trivial) with annotated screenshots.
