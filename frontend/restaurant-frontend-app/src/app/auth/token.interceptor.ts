@@ -11,19 +11,34 @@ import { AuthenticationService } from './services/authentication.service';
 import { SKIP_ERROR_TOAST } from './skip-error-toast.context';
 import { getServerErrorMessage } from '../shared/helpers/http-error-helpers';
 
+const OWNER_ONLY_GUEST_URL = /\/guest\/groups\/[^/]+\/sessions(\/[^/?]+)?(\?|$)/;
+
 export const tokenInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ) => {
   const toastr = inject(ToastService);
+  const authService = inject(AuthenticationService);
+  const tokens = authService.getTokens();
 
-  // IMPORTANT: do not modify Guest endpoints at all.
-  // Guest flow uses a different token (guest session token) and we must not touch the body.
-  // Otherwise we break POST /guest/sessions payload.
+  // IMPORTANT: do not touch the body or an existing Authorization of Guest endpoints.
+  // Guest flow sends its own guest session token; otherwise we break POST /guest/sessions.
+  // Only the owner-only /guest/groups/{id}/sessions sits behind the Cognito authorizer, so it
+  // gets the signed-in user's token; other guest endpoints stay anonymous, as before.
   if (req.url.includes('/guest/')) {
-    return next(req).pipe(
+    const isOwnerOnly = OWNER_ONLY_GUEST_URL.test(req.url);
+    const guestRequest =
+      isOwnerOnly && tokens?.idToken && !req.headers.has('Authorization')
+        ? req.clone({ setHeaders: { Authorization: 'Bearer ' + tokens.idToken } })
+        : req;
+
+    return next(guestRequest).pipe(
       catchError((error: HttpErrorResponse) => {
         console.log(error);
+
+        if (guestRequest.context.get(SKIP_ERROR_TOAST)) {
+          return throwError(() => error);
+        }
 
         let errorMessage = 'An unexpected error occurred.';
         if (error.error && typeof error.error === 'string') {
@@ -66,9 +81,6 @@ export const tokenInterceptor: HttpInterceptorFn = (
       })
     );
   }
-
-  const authService = inject(AuthenticationService);
-  const tokens = authService.getTokens();
 
   const clonedRequest =
     tokens && tokens.idToken

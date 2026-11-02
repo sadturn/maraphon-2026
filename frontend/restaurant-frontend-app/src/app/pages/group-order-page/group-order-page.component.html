@@ -46,6 +46,26 @@
       </div>
     }
     @case ('ready') {
+      <div class="sync">
+        <p class="sync-text" role="status" [class.sync-text--failed]="refreshFailed()">
+          @if (refreshFailed()) {
+            Couldn’t refresh. Showing data from {{ lastUpdated() | date: 'HH:mm:ss' }}
+          } @else {
+            Updated at {{ lastUpdated() | date: 'HH:mm:ss' }}
+          }
+        </p>
+        @if (isOpen()) {
+          <button
+            type="button"
+            class="button button--secondary button--small"
+            [disabled]="isRefreshing()"
+            (click)="refresh()"
+          >
+            Refresh
+          </button>
+        }
+      </div>
+
       @if (!hasAnyDishes()) {
         <p class="state">Participants haven’t added any dishes yet</p>
       } @else {

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable, switchMap } from 'rxjs';
 import { GuestInvite } from '@app/models/reservations/guest-invite.model';
@@ -6,7 +6,9 @@ import { GroupSessionsResponse } from '@app/models/group-orders/group-sessions-r
 import { GroupStatusResponse } from '@app/models/group-orders/group-status.model';
 import { OwnerSessionResponse } from '@app/models/group-orders/owner-session.model';
 import { SubmitGroupPreOrderRequest, SubmittedDish } from '@app/models/group-orders/submit-group-pre-order.model';
+import { GroupRequestOptions } from '@app/models/group-orders/group-request-options.model';
 import { API_BASE_URL } from '@app/shared/config/api-base-url.token';
+import { SKIP_ERROR_TOAST } from '@app/auth/skip-error-toast.context';
 import { GuestInviteService } from '@app/services/reservation/guest-invite.service';
 
 @Injectable({
@@ -24,9 +26,10 @@ export class GroupOrdersService {
       .pipe(switchMap(({ token }) => this.guestInviteService.getInvite$(token)));
   }
 
-  getSessions$(groupReservationId: string): Observable<GroupSessionsResponse> {
+  getSessions$(groupReservationId: string, options: GroupRequestOptions = {}): Observable<GroupSessionsResponse> {
     return this.http.get<GroupSessionsResponse>(
       `${this.baseUrl}/guest/groups/${encodeURIComponent(groupReservationId)}/sessions`,
+      { context: this.createContext(options) },
     );
   }
 
@@ -36,9 +39,10 @@ export class GroupOrdersService {
       .pipe(map((response) => response.guestSessionId));
   }
 
-  getStatus$(groupReservationId: string): Observable<GroupStatusResponse> {
+  getStatus$(groupReservationId: string, options: GroupRequestOptions = {}): Observable<GroupStatusResponse> {
     return this.http.get<GroupStatusResponse>(
       `${this.baseUrl}/guest/groups/${encodeURIComponent(groupReservationId)}/status`,
+      { context: this.createContext(options) },
     );
   }
 
@@ -48,5 +52,9 @@ export class GroupOrdersService {
       `${this.baseUrl}/group-reservations/${encodeURIComponent(groupReservationId)}/submit`,
       body,
     );
+  }
+
+  private createContext({ silent = false }: GroupRequestOptions): HttpContext {
+    return new HttpContext().set(SKIP_ERROR_TOAST, silent);
   }
 }
