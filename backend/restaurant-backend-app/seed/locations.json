@@ -1,0 +1,106 @@
+{
+  "Locations": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "loc-rustaveli-48"
+          },
+          "address": {
+            "S": "Rustaveli Avenue, 48"
+          },
+          "description": {
+            "S": "Flagship restaurant in the heart of Tbilisi with a summer terrace."
+          },
+          "totalCapacity": {
+            "N": "40"
+          },
+          "averageOccupancy": {
+            "S": "75%"
+          },
+          "rating": {
+            "N": "4.8"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "dish-khachapuri-rustaveli-48"
+              },
+              {
+                "S": "dish-caesar-salad-rustaveli-48"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "loc-chavchavadze-14"
+          },
+          "address": {
+            "S": "Ilia Chavchavadze Avenue, 14"
+          },
+          "description": {
+            "S": "Cozy Vake location next to the park, great for family dinners."
+          },
+          "totalCapacity": {
+            "N": "30"
+          },
+          "averageOccupancy": {
+            "S": "60%"
+          },
+          "rating": {
+            "N": "4.6"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "dish-khachapuri-chavchavadze-14"
+              },
+              {
+                "S": "dish-caesar-salad-chavchavadze-14"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "loc-marjanishvili-5"
+          },
+          "address": {
+            "S": "Marjanishvili Street, 5"
+          },
+          "description": {
+            "S": "Bright old-town space near Marjanishvili Square with an open kitchen."
+          },
+          "totalCapacity": {
+            "N": "24"
+          },
+          "averageOccupancy": {
+            "S": "55%"
+          },
+          "rating": {
+            "N": "4.5"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "dish-khachapuri-marjanishvili-5"
+              },
+              {
+                "S": "dish-caesar-salad-marjanishvili-5"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,708 @@
+{
+  "Tables": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "tbl-rustaveli-48-1"
+          },
+          "locationId": {
+            "S": "loc-rustaveli-48"
+          },
+          "capacity": {
+            "N": "2"
+          },
+          "tableNumber": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "tbl-rustaveli-48-2"
+          },
+          "locationId": {
+            "S": "loc-rustaveli-48"
+          },
+          "capacity": {
+            "N": "4"
+          },
+          "tableNumber": {
+            "N": "2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "tbl-rustaveli-48-3"
+          },
+          "locationId": {
+            "S": "loc-rustaveli-48"
+          },
+          "capacity": {
+            "N": "6"
+          },
+          "tableNumber": {
+            "N": "3"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "tbl-chavchavadze-14-1"
+          },
+          "locationId": {
+            "S": "loc-chavchavadze-14"
+          },
+          "capacity": {
+            "N": "2"
+          },
+          "tableNumber": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "tbl-chavchavadze-14-2"
+          },
+          "locationId": {
+            "S": "loc-chavchavadze-14"
+          },
+          "capacity": {
+            "N": "4"
+          },
+          "tableNumber": {
+            "N": "2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "tbl-chavchavadze-14-3"
+          },
+          "locationId": {
+            "S": "loc-chavchavadze-14"
+          },
+          "capacity": {
+            "N": "6"
+          },
+          "tableNumber": {
+            "N": "3"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "tbl-marjanishvili-5-1"
+          },
+          "locationId": {
+            "S": "loc-marjanishvili-5"
+          },
+          "capacity": {
+            "N": "2"
+          },
+          "tableNumber": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "tbl-marjanishvili-5-2"
+          },
+          "locationId": {
+            "S": "loc-marjanishvili-5"
+          },
+          "capacity": {
+            "N": "4"
+          },
+          "tableNumber": {
+            "N": "2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "tbl-marjanishvili-5-3"
+          },
+          "locationId": {
+            "S": "loc-marjanishvili-5"
+          },
+          "capacity": {
+            "N": "6"
+          },
+          "tableNumber": {
+            "N": "3"
+          }
+        }
+      }
+    }
+  ],
+  "Dishes": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-caesar-salad-rustaveli-48"
+          },
+          "locationId": {
+            "S": "loc-rustaveli-48"
+          },
+          "name": {
+            "S": "Caesar Salad"
+          },
+          "description": {
+            "S": "Romaine, parmesan, croutons and house dressing."
+          },
+          "dishType": {
+            "N": "0"
+          },
+          "price": {
+            "N": "180"
+          },
+          "weight": {
+            "S": "250 g"
+          },
+          "calories": {
+            "S": "320 kcal"
+          },
+          "proteins": {
+            "S": "12 g"
+          },
+          "fats": {
+            "S": "22 g"
+          },
+          "carbohydrates": {
+            "S": "18 g"
+          },
+          "vitamins": {
+            "S": "A, C, K"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-tom-yum-rustaveli-48"
+          },
+          "locationId": {
+            "S": "loc-rustaveli-48"
+          },
+          "name": {
+            "S": "Tom Yum"
+          },
+          "description": {
+            "S": "Spicy and sour soup with mushrooms, lemongrass and lime."
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "price": {
+            "N": "220"
+          },
+          "weight": {
+            "S": "350 g"
+          },
+          "calories": {
+            "S": "210 kcal"
+          },
+          "proteins": {
+            "S": "9 g"
+          },
+          "fats": {
+            "S": "8 g"
+          },
+          "carbohydrates": {
+            "S": "24 g"
+          },
+          "vitamins": {
+            "S": "B6, C"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-khachapuri-rustaveli-48"
+          },
+          "locationId": {
+            "S": "loc-rustaveli-48"
+          },
+          "name": {
+            "S": "Adjarian Khachapuri"
+          },
+          "description": {
+            "S": "Boat-shaped bread with sulguni cheese, egg and butter."
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "price": {
+            "N": "250"
+          },
+          "weight": {
+            "S": "400 g"
+          },
+          "calories": {
+            "S": "780 kcal"
+          },
+          "proteins": {
+            "S": "28 g"
+          },
+          "fats": {
+            "S": "38 g"
+          },
+          "carbohydrates": {
+            "S": "76 g"
+          },
+          "vitamins": {
+            "S": "A, B12, D"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-churchkhela-rustaveli-48"
+          },
+          "locationId": {
+            "S": "loc-rustaveli-48"
+          },
+          "name": {
+            "S": "Churchkhela"
+          },
+          "description": {
+            "S": "Walnuts in thickened grape juice."
+          },
+          "dishType": {
+            "N": "2"
+          },
+          "price": {
+            "N": "90"
+          },
+          "weight": {
+            "S": "100 g"
+          },
+          "calories": {
+            "S": "410 kcal"
+          },
+          "proteins": {
+            "S": "7 g"
+          },
+          "fats": {
+            "S": "16 g"
+          },
+          "carbohydrates": {
+            "S": "58 g"
+          },
+          "vitamins": {
+            "S": "E, B1"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-caesar-salad-chavchavadze-14"
+          },
+          "locationId": {
+            "S": "loc-chavchavadze-14"
+          },
+          "name": {
+            "S": "Caesar Salad"
+          },
+          "description": {
+            "S": "Romaine, parmesan, croutons and house dressing."
+          },
+          "dishType": {
+            "N": "0"
+          },
+          "price": {
+            "N": "180"
+          },
+          "weight": {
+            "S": "250 g"
+          },
+          "calories": {
+            "S": "320 kcal"
+          },
+          "proteins": {
+            "S": "12 g"
+          },
+          "fats": {
+            "S": "22 g"
+          },
+          "carbohydrates": {
+            "S": "18 g"
+          },
+          "vitamins": {
+            "S": "A, C, K"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-tom-yum-chavchavadze-14"
+          },
+          "locationId": {
+            "S": "loc-chavchavadze-14"
+          },
+          "name": {
+            "S": "Tom Yum"
+          },
+          "description": {
+            "S": "Spicy and sour soup with mushrooms, lemongrass and lime."
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "price": {
+            "N": "220"
+          },
+          "weight": {
+            "S": "350 g"
+          },
+          "calories": {
+            "S": "210 kcal"
+          },
+          "proteins": {
+            "S": "9 g"
+          },
+          "fats": {
+            "S": "8 g"
+          },
+          "carbohydrates": {
+            "S": "24 g"
+          },
+          "vitamins": {
+            "S": "B6, C"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-khachapuri-chavchavadze-14"
+          },
+          "locationId": {
+            "S": "loc-chavchavadze-14"
+          },
+          "name": {
+            "S": "Adjarian Khachapuri"
+          },
+          "description": {
+            "S": "Boat-shaped bread with sulguni cheese, egg and butter."
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "price": {
+            "N": "250"
+          },
+          "weight": {
+            "S": "400 g"
+          },
+          "calories": {
+            "S": "780 kcal"
+          },
+          "proteins": {
+            "S": "28 g"
+          },
+          "fats": {
+            "S": "38 g"
+          },
+          "carbohydrates": {
+            "S": "76 g"
+          },
+          "vitamins": {
+            "S": "A, B12, D"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-churchkhela-chavchavadze-14"
+          },
+          "locationId": {
+            "S": "loc-chavchavadze-14"
+          },
+          "name": {
+            "S": "Churchkhela"
+          },
+          "description": {
+            "S": "Walnuts in thickened grape juice."
+          },
+          "dishType": {
+            "N": "2"
+          },
+          "price": {
+            "N": "90"
+          },
+          "weight": {
+            "S": "100 g"
+          },
+          "calories": {
+            "S": "410 kcal"
+          },
+          "proteins": {
+            "S": "7 g"
+          },
+          "fats": {
+            "S": "16 g"
+          },
+          "carbohydrates": {
+            "S": "58 g"
+          },
+          "vitamins": {
+            "S": "E, B1"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-caesar-salad-marjanishvili-5"
+          },
+          "locationId": {
+            "S": "loc-marjanishvili-5"
+          },
+          "name": {
+            "S": "Caesar Salad"
+          },
+          "description": {
+            "S": "Romaine, parmesan, croutons and house dressing."
+          },
+          "dishType": {
+            "N": "0"
+          },
+          "price": {
+            "N": "180"
+          },
+          "weight": {
+            "S": "250 g"
+          },
+          "calories": {
+            "S": "320 kcal"
+          },
+          "proteins": {
+            "S": "12 g"
+          },
+          "fats": {
+            "S": "22 g"
+          },
+          "carbohydrates": {
+            "S": "18 g"
+          },
+          "vitamins": {
+            "S": "A, C, K"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-tom-yum-marjanishvili-5"
+          },
+          "locationId": {
+            "S": "loc-marjanishvili-5"
+          },
+          "name": {
+            "S": "Tom Yum"
+          },
+          "description": {
+            "S": "Spicy and sour soup with mushrooms, lemongrass and lime."
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "price": {
+            "N": "220"
+          },
+          "weight": {
+            "S": "350 g"
+          },
+          "calories": {
+            "S": "210 kcal"
+          },
+          "proteins": {
+            "S": "9 g"
+          },
+          "fats": {
+            "S": "8 g"
+          },
+          "carbohydrates": {
+            "S": "24 g"
+          },
+          "vitamins": {
+            "S": "B6, C"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-khachapuri-marjanishvili-5"
+          },
+          "locationId": {
+            "S": "loc-marjanishvili-5"
+          },
+          "name": {
+            "S": "Adjarian Khachapuri"
+          },
+          "description": {
+            "S": "Boat-shaped bread with sulguni cheese, egg and butter."
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "price": {
+            "N": "250"
+          },
+          "weight": {
+            "S": "400 g"
+          },
+          "calories": {
+            "S": "780 kcal"
+          },
+          "proteins": {
+            "S": "28 g"
+          },
+          "fats": {
+            "S": "38 g"
+          },
+          "carbohydrates": {
+            "S": "76 g"
+          },
+          "vitamins": {
+            "S": "A, B12, D"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dish-churchkhela-marjanishvili-5"
+          },
+          "locationId": {
+            "S": "loc-marjanishvili-5"
+          },
+          "name": {
+            "S": "Churchkhela"
+          },
+          "description": {
+            "S": "Walnuts in thickened grape juice."
+          },
+          "dishType": {
+            "N": "2"
+          },
+          "price": {
+            "N": "90"
+          },
+          "weight": {
+            "S": "100 g"
+          },
+          "calories": {
+            "S": "410 kcal"
+          },
+          "proteins": {
+            "S": "7 g"
+          },
+          "fats": {
+            "S": "16 g"
+          },
+          "carbohydrates": {
+            "S": "58 g"
+          },
+          "vitamins": {
+            "S": "E, B1"
+          },
+          "state": {
+            "N": "1"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "Waiters": [
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "waiter-rustaveli-48"
+          },
+          "locationId": {
+            "S": "loc-rustaveli-48"
+          },
+          "createdAt": {
+            "S": "2026-11-02T14:01:21.903Z"
+          },
+          "reservations": {
+            "L": []
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "waiter-chavchavadze-14"
+          },
+          "locationId": {
+            "S": "loc-chavchavadze-14"
+          },
+          "createdAt": {
+            "S": "2026-11-02T14:01:21.903Z"
+          },
+          "reservations": {
+            "L": []
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "waiter-marjanishvili-5"
+          },
+          "locationId": {
+            "S": "loc-marjanishvili-5"
+          },
+          "createdAt": {
+            "S": "2026-11-02T14:01:21.903Z"
+          },
+          "reservations": {
+            "L": []
+          }
+        }
+      }
+    }
+  ]
+}
