@@ -22,6 +22,19 @@
   font-weight: 500;
 }
 
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px 12px;
+}
+
+.remove {
+  padding-inline: 4px;
+  text-underline-offset: 6px;
+}
+
 // статус: текст + іконка-крапка, а не лише колір
 .chip {
   display: inline-flex;
@@ -136,6 +149,12 @@
 @media (max-width: 600px) {
   .card {
     padding: 12px;
+  }
+
+  // статус і «Remove Guest» — окремим рядком під ім'ям, щоб не стискати заголовок
+  .meta {
+    grid-column: 1 / -1;
+    justify-content: space-between;
   }
 
   // кількість переходить під назву, щоб довгі назви не стискались

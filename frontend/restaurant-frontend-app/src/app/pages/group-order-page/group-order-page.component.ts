@@ -60,6 +60,8 @@ export class GroupOrderPageComponent implements OnInit {
   readonly lastUpdated = signal<Date | null>(null);
   readonly refreshFailed = signal(false);
   readonly isRefreshing = signal(false);
+  readonly guestToRemove = signal<Participant | null>(null);
+  readonly isRemoving = signal(false);
 
   private syncSubscription: Subscription | null = null;
 
@@ -153,6 +155,47 @@ export class GroupOrderPageComponent implements OnInit {
           this.toastService.success('Pre-order sent to the restaurant');
         },
         // помилку (з текстом від API) вже показав tokenInterceptor — тут лише лишаємо кнопку активною
+        error: () => undefined,
+      });
+  }
+
+  openRemove(person: Participant): void {
+    if (this.isOpen() && person.type === 'Guest') {
+      this.guestToRemove.set(person);
+    }
+  }
+
+  closeRemove(): void {
+    if (!this.isRemoving()) {
+      this.guestToRemove.set(null);
+    }
+  }
+
+  removeGuest(): void {
+    const invite = this.invite();
+    const person = this.guestToRemove();
+    if (!invite || !person || this.isRemoving()) {
+      return;
+    }
+
+    this.isRemoving.set(true);
+    this.groupOrdersService
+      .removeSession$(invite.GroupReservationId, person.id)
+      .pipe(
+        finalize(() => {
+          this.isRemoving.set(false);
+          this.guestToRemove.set(null);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        // список і суми оновлюються з відповіді сервера — через ті самі computed()
+        next: (sessions) => {
+          this.participants.set(sessions.participants);
+          this.lastUpdated.set(new Date());
+          this.toastService.success(`${person.name} was removed from the reservation`);
+        },
+        // помилку вже показав tokenInterceptor — список лишається як був
         error: () => undefined,
       });
   }

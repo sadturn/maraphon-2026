@@ -151,6 +151,21 @@
   width: 100%;
 }
 
+// червона обвідка для незворотної дії (Remove Guest) — як у макеті
+.button--danger {
+  color: color.$red-400;
+  background-color: color.$neutral-0;
+  border-color: color.$red-400;
+
+  &:hover:not(:disabled) {
+    background-color: color.$red-30;
+  }
+
+  &:active:not(:disabled) {
+    background-color: color.$red-100;
+  }
+}
+
 .meta {
   display: flex;
   flex-wrap: wrap;

@@ -54,6 +54,13 @@ export class GroupOrdersService {
     );
   }
 
+  /** Відповідь — у форматі GET …/sessions: оновлений список учасників */
+  removeSession$(groupReservationId: string, guestSessionId: string): Observable<GroupSessionsResponse> {
+    return this.http.delete<GroupSessionsResponse>(
+      `${this.baseUrl}/guest/groups/${encodeURIComponent(groupReservationId)}/sessions/${encodeURIComponent(guestSessionId)}`,
+    );
+  }
+
   private createContext({ silent = false }: GroupRequestOptions): HttpContext {
     return new HttpContext().set(SKIP_ERROR_TOAST, silent);
   }
