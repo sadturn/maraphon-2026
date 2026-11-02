@@ -1,0 +1,4 @@
+account_id: "403322446723"
+region: "eu-north-1"
+project_path: "C:\\Users\\nikol\\Downloads\\Telegram Desktop\\marathon2026-archive\\marathon2026\\backend\\restaurant-backend-app" #replace with your project path
+deploy_target_bucket: "marathon2026-restaurant-artifacts-403322446723"
