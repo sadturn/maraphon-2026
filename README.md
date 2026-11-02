@@ -3,11 +3,11 @@
 Restaurant chain with 3 locations, 10–20 tables per location.
 
 **Current main capabilities:**
-• Restaurant discovery — location details, ratings, and review browsing
-• Table reservations
-• Menu browsing
-• Pre-ordering and order management
-• Guest feedback collection
+- Restaurant discovery — location details, ratings, and review browsing
+- Table reservations
+- Menu browsing
+- Pre-ordering and order management
+- Guest feedback collection
 
 ## Homework 1 - Create User Story
 
