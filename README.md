@@ -49,3 +49,22 @@ POST confirmation of the consolidated pre-order (includes only submitted session
 
 - [x] Level 3
 	DELETE a guest session from the group; the response returns the updated list and total.
+
+## Homework 6 - Frontend
+
+**Group Pre-order: Owner Review screen** — [full report with screenshots](homework-report/frontend/README.md)
+
+- [x] Practice
+Participant card and the participants page.
+
+- [x] Level 1
+Owner Review screen layout on static data (header, cards, Grand Total, 375 px).
+
+- [x] Level 2
+Group pre-order on the mock backend: service, signals, consolidated order, status badge, Submit with confirmation, loading / error / empty states.
+
+- [x] Level 3
+Real API: background sync every 15 s, "Updated at" + Refresh, silent requests, real backend errors as toasts.
+
+- [x] Bonus
+Remove Guest with confirmation; the list updates from the server response.
