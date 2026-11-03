@@ -10,9 +10,8 @@ on:
       - "aqa/restaurant-aqa-framework/**"
       - ".github/workflows/aqa-quality.yml"
 
+  # Every branch, so a homework branch is checked before it is merged.
   push:
-    branches:
-      - main
     paths:
       - "aqa/restaurant-aqa-framework/**"
       - ".github/workflows/aqa-quality.yml"

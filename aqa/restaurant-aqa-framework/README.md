@@ -67,7 +67,7 @@ Everything a run produces lands in `TestResults/`: the TUnit report and TRX, the
 |---|---|
 | Git hooks (local) | `pre-commit`: `dotnet format` check and Gherkin lint on staged files · `commit-msg`: Conventional Commits · `pre-push`: build with analyzers |
 | `aqa-quality.yml` | on every push and pull request: no generated files tracked, format, build (warnings are errors), Gherkin lint, test discovery |
-| `aqa-tests.yml` | the scenarios themselves, nightly and on demand (Actions → AQA Tests → Run workflow) |
+| `aqa-tests.yml` | the scenarios themselves, on demand (Actions → AQA Tests → Run workflow; scope: all, ui, api, L1, L2, L3 or smoke). A failed scenario does not stop the run: the reports and traces are uploaded either way, and the job summary lists what failed |
 
 Enable the hooks once per clone, from the repository root:
 
@@ -107,7 +107,7 @@ Publish your work in your own public Git repository (the link is the deliverable
 - **Variables:** `AQA_UI_URL`, `AQA_API_URL`
 - **Secrets (optional, for the leftover sweep only):** `AQA_WAITER_USERNAME`, `AQA_WAITER_PASSWORD`
 
-`aqa-quality.yml` runs on every push and pull request; `aqa-tests.yml` (nightly and on demand) tests whatever those variables point at. Never put credentials in the repository, in `.env.example` or in test code.
+`aqa-quality.yml` runs on every push and pull request; `aqa-tests.yml` (on demand) tests whatever those variables point at. It has no nightly schedule on purpose: every run registers accounts the API cannot delete. Never put credentials in the repository, in `.env.example` or in test code.
 
 ## Presetup instructions
 
