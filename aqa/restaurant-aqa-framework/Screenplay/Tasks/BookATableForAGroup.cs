@@ -8,7 +8,8 @@ namespace Restaurant_Aqa_Framework.Screenplay.Tasks;
 
 /// <summary>The customer remembered as <paramref name="by"/> books the scenario's table for <paramref name="guests"/>
 /// guests; a booking for two or more opens a group pre-order. Remembers the reservation and its
-/// <see cref="GroupBooking"/>, and cancels the reservation when the scenario ends (which also closes the group).</summary>
+/// <see cref="GroupBooking"/> — as the current one and under <paramref name="by"/>, for scenarios with two groups — and
+/// cancels the reservation when the scenario ends (which also closes the group).</summary>
 public sealed class BookATableForAGroup(int guests, string by = "owner") : ITask
 {
     public async Task PerformAsAsync(Actor actor)
@@ -38,6 +39,6 @@ public sealed class BookATableForAGroup(int guests, string by = "owner") : ITask
         await response.CaptureAsync(await groups.GetInviteAsync(inviteToken));
         response.ThrowUnlessSucceeded("Opening the invitation");
 
-        actor.Remember(new GroupBooking(reservation.Id, response.Json<GroupInviteResponse>().GroupReservationId));
+        actor.Remember(by, new GroupBooking(reservation.Id, response.Json<GroupInviteResponse>().GroupReservationId));
     }
 }

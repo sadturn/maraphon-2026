@@ -10,7 +10,8 @@ End-to-end tests for the Green & Tasty restaurant application: Reqnroll (Gherkin
 - **Levels are tags:**
   - `@L1` covers viewing the participants (`Features/GroupPreOrderParticipants.feature`).
   - `@L2` covers submitting the consolidated pre-order (`Features/GroupPreOrderSubmission.feature`).
-  - `@L3` (removing a participant) comes next.
+  - `@L3` covers removing a guest, plus the end-to-end scenario (`Features/GroupPreOrderGuestRemoval.feature`). My frontend has the Remove Guest button (the bonus of the frontend homework), so L3 runs on screen as well as through the API.
+- **Other tags:** `@smoke` marks the main scenario of each level, `@e2e` the end-to-end one, `@negative` the refusals.
 
 ```bash
 dotnet run --no-build -- --treenode-filter "/*/*/*/*[Category=L1]"   # one level
@@ -41,6 +42,11 @@ Every scenario sets up its own restaurant: a location, a table, a menu with fixe
 | Submitting a second time | 400 "Group reservation was submitted." On screen the button disappears once the pre-order is sent. |
 | Submitting: not the owner / not signed in | 403 "Only the reservation owner can perform this action." / 401. The group stays open. |
 | Submitting: the submitted carts hold no dishes | Not testable from outside. An empty cart cannot be submitted, and a submitted cart cannot be changed, so this state cannot be set up through the API or the UI. |
+| Removing a guest | 200 with the updated `participants` and `total`, so the removed guest's cart no longer counts. A guest who has already submitted can be removed too. |
+| Removing the last guest | 200, `participants: []` and `total: 0` (the owner is still listed if their session exists). On screen: "Participants haven't added any dishes yet". |
+| Removing a guest of another group | 400 "Guest session does not belong to this group reservation." |
+| Removing a guest who does not exist | 404 "Guest session with id &lt;id&gt; not found." |
+| Removing: not the owner / not signed in | 403 "Only the reservation owner can perform this action." / 401. The guest stays. |
 
 Guidance for extending the suite (writing Gherkin, steps, Screenplay, test data, working with an AI assistant) is in [CLAUDE.md](CLAUDE.md).
 
@@ -54,8 +60,6 @@ dotnet run --no-build -- --treenode-filter "/*/*/*/*[Category=smoke]"   # by tag
 ```
 
 Everything a run produces lands in `TestResults/`: the TUnit report and TRX, the Reqnroll report in `reqnroll/`, and Playwright traces in `traces/` (open one with `npx playwright show-trace <file>.zip`).
-
-Some scenarios are expected to fail (`@known-defect`, bugs in the application) or are skipped (`@wip`, no admin account configured). That is intentional.
 
 ## Quality gates
 
@@ -84,35 +88,24 @@ Settings come from `.env` or real environment variables (variables win):
 |---|---|
 | `UI_URL` | where the frontend is served |
 | `API_URL` | base URL of the backend API, including the stage (for example `…/develop`) |
-| `WAITER_USERNAME`, `WAITER_PASSWORD` | a waiter account that already exists in the environment under test |
-| `TESTTABLE_ID`, `TESTTABLE_WAITER_*` | a table and the waiter assigned to it (only for scenarios that need them) |
-| `ADMIN_USERNAME`, `ADMIN_PASSWORD` | an admin account; without it the admin scenarios are skipped |
+| `DEFAULT_TIMEOUT_MS`, `NAVIGATION_TIMEOUT_MS` | how long to wait for an action / a page; raise the first to `30000` against a backend that starts cold |
+| `WAITER_USERNAME`, `WAITER_PASSWORD` | optional: a standing waiter account, used only by the sweep that removes leftover `AQA-Sample-` data before and after a run. The scenarios hire a waiter of their own and do not need it |
 
 The full list, with defaults, is in `.env.example`.
 
 ## Testing your own deployment
 
-### If you deployed the backend / frontend / DevOps homework
+1. `cp .env.example .env` and set `UI_URL` and `API_URL` to your deployment (the API URL includes the stage, for example `…/develop`).
+2. Run `dotnet build` and a small slice first (`--treenode-filter "/*/*/*/*[Category=smoke]"`).
 
-1. `cp .env.example .env` and set `UI_URL` and `API_URL` to your deployment (API URL includes the stage, for example `…/develop`).
-2. Waiters cannot be created by signing up, so create a waiter (and, for the admin scenarios, an admin) in *your* environment and put its credentials in `WAITER_*` / `ADMIN_*`. Optionally add a table and its assigned waiter (`TESTTABLE_*`).
-3. Run `dotnet build` and a small slice first (`--treenode-filter "/*/*/*/*[Category=smoke]"`).
-
-### If you have not deployed your own homework
-
-If you deployed the original application, test that: set `UI_URL` / `API_URL` as above. Otherwise point the framework at a comparable public site (Booking, Airbnb, OpenTable, …) and write all the layers for it yourself: Gherkin features, step definitions, Screenplay tasks and questions, page objects with locators, and API clients where the site has a usable API. Use only flows you are allowed to automate (no purchases, no real bookings, respect the site's terms), and set `UI_URL` to that site.
-
-1. **Generate a skeleton with Playwright codegen** (see "Presetup instructions"): record one flow, for example search → open a result → check details. Save the generated code to a scratch file, it is only raw material.
-2. **Split it across the layers**: locators and small actions go to `Ui/` page objects, the flow becomes a task in `Screenplay/Tasks/`, the read-backs become questions in `Screenplay/Questions/`, the business wording goes to `Features/` and thin glue to `StepDefinitions/`.
-3. **Replace weak locators.** Codegen often emits positional or text-fragile selectors. Prefer role + accessible name, label, test id, then CSS (see [CLAUDE.md](CLAUDE.md)); check them in the Playwright inspector.
-4. Tag scenarios `@ui` / `@api`, keep them independent, and run `npx gherkin-lint -c .gherkin-lintrc "Features/*.feature"`.
+No accounts have to be prepared: every scenario registers the customers it needs and hires its own waiter (see "Test data" above).
 
 ### CI on your own public repository
 
-Publish your work in your own public Git repository (the link is the deliverable). Workflows are disabled in a fresh fork until you enable them. Add the same values under Settings → Secrets and variables → Actions:
+Publish your work in your own public Git repository (the link is the deliverable). Workflows are disabled in a fresh fork until you enable them. Add the values under Settings → Secrets and variables → Actions:
 
-- **Variables:** `AQA_UI_URL`, `AQA_API_URL`, `AQA_TESTTABLE_ID`
-- **Secrets:** `AQA_WAITER_USERNAME`, `AQA_WAITER_PASSWORD`, `AQA_ADMIN_USERNAME`, `AQA_ADMIN_PASSWORD`, `AQA_TESTTABLE_WAITER_USERNAME`, `AQA_TESTTABLE_WAITER_PASSWORD`
+- **Variables:** `AQA_UI_URL`, `AQA_API_URL`
+- **Secrets (optional, for the leftover sweep only):** `AQA_WAITER_USERNAME`, `AQA_WAITER_PASSWORD`
 
 `aqa-quality.yml` runs on every push and pull request; `aqa-tests.yml` (nightly and on demand) tests whatever those variables point at. Never put credentials in the repository, in `.env.example` or in test code.
 

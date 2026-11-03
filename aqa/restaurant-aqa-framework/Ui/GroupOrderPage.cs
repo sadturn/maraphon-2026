@@ -41,7 +41,21 @@ public sealed partial class GroupOrderPage(IPage page) : BasePage(page)
 
     public ParticipantCardComponent ParticipantCard(int index) => new(ParticipantCards.Nth(index));
 
-    public Task NavigateAsync(string reservationId) => NavigateToAsync($"/reservations/{reservationId}/group-order");
+    public static string PathOf(string reservationId) => $"/reservations/{reservationId}/group-order";
+
+    public Task NavigateAsync(string reservationId) => NavigateToAsync(PathOf(reservationId));
+
+    /// <summary>The guest's card button is labelled "Remove &lt;name&gt;"; the dialog it opens asks to confirm.</summary>
+    public ILocator RemoveGuestButton(string guestName) =>
+        Page.GetByRole(AriaRole.Button, new() { Name = $"Remove {guestName}", Exact = true });
+
+    public ILocator RemoveGuestDialog => Page.GetByRole(AriaRole.Dialog, new() { Name = "Remove Guest" });
+
+    public async Task RemoveGuestAsync(string guestName)
+    {
+        await RemoveGuestButton(guestName).ClickAsync();
+        await RemoveGuestDialog.GetByRole(AriaRole.Button, new() { Name = "Remove Guest", Exact = true }).ClickAsync();
+    }
 
     [GeneratedRegex("Updated at|Couldn.t refresh")]
     private static partial Regex LoadedRegex();

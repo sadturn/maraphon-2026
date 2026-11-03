@@ -28,6 +28,14 @@ public sealed class GroupPreOrderApi(IAPIRequestContext api) : ApiClientBase(api
             Headers = Headers(bearerToken),
         });
 
+    /// <summary>Answers with the group's updated participants and total, the same shape as <see cref="GetParticipantsAsync"/>.
+    /// Not retried like other DELETEs: a repeat after a 500 would answer 404 for a guest it had already removed.</summary>
+    public Task<IAPIResponse> RemoveGuestAsync(string groupReservationId, string guestSessionId, string? bearerToken = null) =>
+        Api.DeleteAsync(Url($"/guest/groups/{groupReservationId}/sessions/{guestSessionId}"), new APIRequestContextOptions
+        {
+            Headers = Headers(bearerToken),
+        });
+
     public Task<IAPIResponse> SubmitAsync(string groupReservationId, string reservationId, string? bearerToken = null) =>
         Api.PostAsync(Url($"/group-reservations/{groupReservationId}/submit"), new APIRequestContextOptions
         {
