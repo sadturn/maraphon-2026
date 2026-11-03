@@ -84,3 +84,24 @@ Test run against the screenshot of the implemented Menu page: 1 passed, 5 failed
 
 - [x] Defect reports
 7 defects (4 Major, 2 Minor, 1 Trivial) with annotated screenshots.
+
+## Homework 8 - AQA
+
+**Group Pre-order: end-to-end tests (Direction 1)** — [framework README](aqa/restaurant-aqa-framework/README.md)
+
+BDD + Screenplay (Reqnroll, TUnit, Playwright for .NET) against my own deployment: 46 scenarios through the UI and the API, all passing. Each scenario sets up its own restaurant, waiter and booking and removes them afterwards.
+
+- [x] Level 1
+Viewing participants (16 scenarios): dishes, quantities and subtotals per guest, a grand total that follows cart changes, guests still choosing or without dishes, an empty group, only the owner may see it, a group that does not exist.
+
+- [x] Level 2
+Submitting the consolidated pre-order (16 scenarios): same dishes added up, unsubmitted carts left out, the waiter sees the order, every refusal (no submitted cart, no owner pre-order, missing group or booking, second submit, not the owner).
+
+- [x] Level 3
+Removing a guest (14 scenarios): one of several, a submitted guest, the last guest, a guest of another group, a guest who does not exist, not the owner, and the end-to-end scenario from guests ordering to the waiter's screen.
+
+- [x] CI
+`aqa-quality.yml` on every push (format, build, Gherkin lint, test discovery) and `aqa-tests.yml` on demand by level or tag, with reports, TRX and Playwright traces as artifacts; a failed scenario does not stop the pipeline.
+
+- [ ] Star task
+Report Portal and a cloud-hosted pipeline.
