@@ -7,7 +7,10 @@ End-to-end tests for the Green & Tasty restaurant application: Reqnroll (Gherkin
 - **Direction 1 — Group pre-order**, tested against my own deployed backend and frontend (homeworks 4–6).
 - **Approach: BDD + Screenplay**, on this framework as it is. The business rules read as Gherkin, the steps stay thin, and every action is a task or question shared between the UI and the API stage.
 - **Test pyramid.** The main scenarios run on screen (`@ui`): what the owner sees. Authorisation, validation and test-data set-up go through the API (`@api`).
-- **Levels are tags:** `@L1` covers viewing the participants (`Features/GroupPreOrderParticipants.feature`). `@L2` (submitting) and `@L3` (removing a participant) come next.
+- **Levels are tags:**
+  - `@L1` covers viewing the participants (`Features/GroupPreOrderParticipants.feature`).
+  - `@L2` covers submitting the consolidated pre-order (`Features/GroupPreOrderSubmission.feature`).
+  - `@L3` (removing a participant) comes next.
 
 ```bash
 dotnet run --no-build -- --treenode-filter "/*/*/*/*[Category=L1]"   # one level
@@ -32,6 +35,12 @@ Every scenario sets up its own restaurant: a location, a table, a menu with fixe
 | Group that does not exist | 404 |
 | Group nobody has joined yet | `participants: []`, `total: 0`. Once the owner opens their screen, the owner has a session too and is listed with no dishes. |
 | Grand total | Through the service, `total` is the sum of every participant. On the owner's screen, Grand Total is the consolidated order, so only submitted carts count (as the frontend homework specifies). |
+| Submitting: no guest has submitted a cart | 400 "There are no submitted guest sessions." |
+| Submitting: the owner has no pre-order of their own | 400 "Order for reservation &lt;id&gt; was not found.". The owner's pre-order is the order the restaurant receives, so the owner has to pre-order something first. On screen the button is still enabled, and the same message comes back as a toast. |
+| Submitting: group or booking does not exist | 404 "Group reservation was not found" / "Reservation &lt;id&gt; was not found." |
+| Submitting a second time | 400 "Group reservation was submitted." On screen the button disappears once the pre-order is sent. |
+| Submitting: not the owner / not signed in | 403 "Only the reservation owner can perform this action." / 401. The group stays open. |
+| Submitting: the submitted carts hold no dishes | Not testable from outside. An empty cart cannot be submitted, and a submitted cart cannot be changed, so this state cannot be set up through the API or the UI. |
 
 Guidance for extending the suite (writing Gherkin, steps, Screenplay, test data, working with an AI assistant) is in [CLAUDE.md](CLAUDE.md).
 

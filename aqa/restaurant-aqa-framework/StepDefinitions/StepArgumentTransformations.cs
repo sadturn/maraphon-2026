@@ -1,4 +1,5 @@
 using Restaurant_Aqa_Framework.Api.Dtos.Dishes;
+using Restaurant_Aqa_Framework.Screenplay.Tasks;
 using Restaurant_Aqa_Framework.Support;
 
 namespace Restaurant_Aqa_Framework.StepDefinitions;
@@ -85,6 +86,10 @@ public static class StepArgumentTransformations
         "a visitor who is not signed in" => Viewer.VisitorNotSignedIn,
         _ => throw new ArgumentOutOfRangeException(nameof(value), value, null),
     };
+
+    [StepArgumentTransformation(Name = "submission_target", Regex = "(group|booking)")]
+    public static SubmissionTarget ToSubmissionTarget(string value) =>
+        value == "group" ? SubmissionTarget.AGroupThatDoesNotExist : SubmissionTarget.ABookingThatDoesNotExist;
 
     /// <summary>An amount as a feature file writes it: always two decimals, no currency sign ("23.00").</summary>
     [StepArgumentTransformation(Name = "money", Regex = @"(\d+\.\d{2})")]

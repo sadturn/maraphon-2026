@@ -26,6 +26,11 @@ public static class ApiResponseExtensions
             var parsed = JsonSerializer.Deserialize<JsonElement>(json);
             if (parsed.ValueKind == JsonValueKind.Object && parsed.TryGetProperty("error", out var error))
                 return error.GetString() ?? json;
+
+            // The group pre-order's own refusals come as {"message": "...", "errorCode": ...} (ErrorCodeResponse).
+            if (parsed.ValueKind == JsonValueKind.Object && parsed.TryGetProperty("message", out var message)
+                && message.ValueKind == JsonValueKind.String)
+                return message.GetString() ?? json;
         }
         catch (JsonException)
         {

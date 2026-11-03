@@ -23,6 +23,20 @@ public sealed partial class GroupOrderPage(IPage page) : BasePage(page)
 
     public ILocator GrandTotal => Page.Locator(".grand-total-value");
 
+    /// <summary>"Collecting pre-orders" while the group is open, "Sent to Restaurant" once it is submitted.</summary>
+    public ILocator StatusBadge => Page.Locator(".title-row .badge");
+
+    /// <summary>Only there while the group is open.</summary>
+    public ILocator SubmitButton => Page.GetByRole(AriaRole.Button, new() { Name = "Submit Pre-Order", Exact = true });
+
+    public ILocator ConfirmDialog => Page.GetByRole(AriaRole.Dialog, new() { Name = "Submit pre-order?" });
+
+    public async Task SubmitAsync()
+    {
+        await SubmitButton.ClickAsync();
+        await ConfirmDialog.GetByRole(AriaRole.Button, new() { Name = "Submit", Exact = true }).ClickAsync();
+    }
+
     public ILocator ParticipantCards => Page.Locator("app-participant-card").GetByRole(AriaRole.Article);
 
     public ParticipantCardComponent ParticipantCard(int index) => new(ParticipantCards.Nth(index));
